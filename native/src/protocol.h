@@ -1,7 +1,8 @@
 #pragma once
 #include <windows.h>
 #include <cstdint>
-constexpr uint32_t kMagic=0x4d434e54,kVersion=3;
+#include "runtime_profile.h"
+constexpr uint32_t kMagic=0x4d434e54,kVersion=4;
 constexpr int kWidth=64,kHeight=36,kPixels=kWidth*kHeight,kInputCapacity=512;
 enum BridgeStatus:LONG{Starting=0,Running=1,Stopped=2,Failed=3};
 enum StopReason:LONG{None=0,StopButton=1,Hotkey=2,ControllerGone=3,SourceGone=4,TargetGone=5,ApiError=6};
@@ -11,6 +12,7 @@ struct InputEvent{int32_t type,a,b,c,d;double x,y,z,w;};
 struct SharedState{
     uint32_t magic,version,bytes,controllerPid;
     uint32_t targetPid,sourcePid,fixture,flags;
+    NativeProfile profile;
     uint64_t targetHwnd,sourceHwnd;
     double left,top,right,bottom;
     wchar_t stopEvent[128],readyEvent[128];

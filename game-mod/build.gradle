@@ -19,4 +19,4 @@ tasks.withType(JavaCompile).configureEach { options.release = 21 }
 java { sourceCompatibility = JavaVersion.VERSION_21; targetCompatibility = JavaVersion.VERSION_21 }
 // 开发验收使用独立演示目录，不读取用户已有世界或账号。
 // Clone-friendly default; override with -Dmcntm.runDir=<path> for another test directory.
-loom { runs { client { runDir System.getProperty('mcntm.runDir', 'run'); programArg '--demo' } } }
+loom { runs { client { runDir project.relativePath(file(System.getProperty('mcntm.runDir', 'run'))); programArg '--demo' } } }

@@ -88,7 +88,7 @@ std::wstring ExtractPayload(HINSTANCE instance){
     return file; // .tmp 扩展名不影响 LoadLibraryW，内容仍是标准 PE DLL。
 }
 
-void Session::Start(HWND target,HWND source,RECT area,const std::wstring& path,bool fixture,bool ownsFile){
+void Session::Start(HWND target,HWND source,RECT area,const std::wstring& path,const NativeProfile& profile,bool fixture,bool ownsFile){
     if(process_)throw WinError(L"会话已启动",ERROR_BUSY);
     DWORD targetId=WindowPid(target),sourceId=WindowPid(source);
     if(!targetId || !sourceId || target==source)throw WinError(L"窗口无效",ERROR_INVALID_WINDOW_HANDLE);
@@ -119,6 +119,7 @@ void Session::Start(HWND target,HWND source,RECT area,const std::wstring& path,b
     Check(state!=nullptr,L"映射共享状态");
     ZeroMemory(state,sizeof(*state));
     state->magic=kMagic;state->version=kVersion;state->bytes=sizeof(*state);
+    state->profile=profile;
     state->controllerPid=GetCurrentProcessId();state->targetPid=targetPid;state->sourcePid=sourceId;
     state->fixture=fixture?1:0;state->targetHwnd=reinterpret_cast<uint64_t>(target);
     state->flags=1;
