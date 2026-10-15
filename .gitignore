@@ -1,0 +1,32 @@
+# Build outputs and development runtimes
+.gradle/
+build/
+run/
+work/
+.idea/
+.vs/
+.vscode/
+__pycache__/
+*.py[cod]
+CMakeFiles/
+CMakeCache.txt
+*.exe
+*.dll
+*.pdb
+*.lib
+*.exp
+*.obj
+*.ilk
+*.jar
+!game-mod/gradle/wrapper/gradle-wrapper.jar
+*.zip
+
+# Local credentials, sessions and raw machine crash reports
+.env
+.env.*
+session.json
+session-*.json
+*.log
+*.dmp
+*.wer
+evidence/crash-report-index.json

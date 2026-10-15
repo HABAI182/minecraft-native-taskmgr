@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 3.24)
+project(MCNativeTaskmgr VERSION 0.1.2 LANGUAGES C CXX RC)
+enable_language(ASM_MASM)
+if(NOT WIN32 OR NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+  message(FATAL_ERROR "Windows x64 required")
+endif()
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+add_compile_definitions(UNICODE _UNICODE NOMINMAX WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0A00)
+add_compile_options($<$<COMPILE_LANGUAGE:C,CXX>:/W4> $<$<COMPILE_LANGUAGE:C,CXX>:/utf-8>)
+add_library(minhook STATIC third_party/src/buffer.c third_party/src/hook.c third_party/src/trampoline.c third_party/src/hde/hde64.c)
+target_include_directories(minhook PUBLIC third_party/include)
+add_library(TaskmgrNativeBridge SHARED src/bridge.cpp)
+target_link_libraries(TaskmgrNativeBridge PRIVATE minhook user32 comctl32)
+target_compile_options(TaskmgrNativeBridge PRIVATE /EHsc)
+target_link_options(TaskmgrNativeBridge PRIVATE /DEBUG:FULL /OPT:REF /OPT:ICF)
+add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/payload_$<CONFIG>.rc"
+  COMMAND ${CMAKE_COMMAND} "-DDLL=$<TARGET_FILE:TaskmgrNativeBridge>"
+    "-DOUT=${CMAKE_CURRENT_BINARY_DIR}/payload_$<CONFIG>.rc"
+    "-DMANIFEST=${CMAKE_CURRENT_SOURCE_DIR}/src/client.manifest"
+    -P "${CMAKE_CURRENT_SOURCE_DIR}/src/write_payload.cmake"
+  DEPENDS TaskmgrNativeBridge src/client.manifest src/write_payload.cmake)
+add_executable(MCNativeTaskmgr WIN32 src/client.cpp src/network.cpp src/injector.cpp "${CMAKE_CURRENT_BINARY_DIR}/payload_$<CONFIG>.rc")
+target_compile_options(MCNativeTaskmgr PRIVATE /EHsc)
+target_link_libraries(MCNativeTaskmgr PRIVATE user32 gdi32 shell32 bcrypt ws2_32)
+target_link_options(MCNativeTaskmgr PRIVATE /MANIFEST:NO)
+add_executable(MCNativeProfileVerify tests/profile_verify.cpp tests/leaf_probe.asm)
+target_include_directories(MCNativeProfileVerify PRIVATE src)
+target_link_libraries(MCNativeProfileVerify PRIVATE minhook)
+add_executable(MCNativeGeometryVerify tests/geometry_verify.cpp)
+target_include_directories(MCNativeGeometryVerify PRIVATE src)

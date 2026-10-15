@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "mc_native_taskmgr",
+  "version": "${version}",
+  "name": "Minecraft Native Task Manager Bridge",
+  "description": "Game-side framebuffer and input bridge for a native Task Manager renderer.",
+  "environment": "client",
+  "entrypoints": { "client": ["dev.mctaskmgr.NativeTaskmgrClient"] },
+  "mixins": ["mc_native_taskmgr.mixins.json"],
+  "depends": { "fabricloader": ">=0.16.14", "minecraft": "1.21.1", "java": ">=21", "fabric-api": "*" }
+}

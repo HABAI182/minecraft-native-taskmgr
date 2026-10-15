@@ -1,0 +1,65 @@
+{
+  "taskmgr_file_version": "10.0.26100.9549",
+  "sha256": "8215acab6fb1c747279954fdf55c05e915381fc32f8b9e996c54eecf189f1227",
+  "timestamp": 2253439176,
+  "image_size": 5795840,
+  "pdb": "6A6407A6B6406A9FA551C3A72B1926491",
+  "functions": {
+    "ViewUpdate": {
+      "rva": "0xac00",
+      "preimage": "48895c2408574883ec20488bd9e86204"
+    },
+    "DeleteObject": {
+      "rva": "0x124ddc",
+      "preimage": "e92f070000cccccccccccccccccccccc"
+    },
+    "LoadLogical": {
+      "rva": "0x1c54f0",
+      "preimage": "48895c2408488974241848897c242041"
+    },
+    "LoadHeatMap": {
+      "rva": "0x1c540c",
+      "preimage": "48895c24104889742418574883ec3048"
+    },
+    "LogicalCount": {
+      "rva": "0x74ad8",
+      "preimage": "0fb781380900006685c07402c3ccb801"
+    },
+    "Initialize": {
+      "rva": "0x1d1684",
+      "preimage": "48895c241048896c2418565741544156"
+    },
+    "UpdateData": {
+      "rva": "0x1d1eb0",
+      "preimage": "48895c2410488974241855574157488d"
+    },
+    "Layout": {
+      "rva": "0x1d18b0",
+      "preimage": "488bc44889581848897020574883ec30"
+    },
+    "Destructor": {
+      "rva": "0x1d1350",
+      "preimage": "40534883ec20488bd9488b09e87b3af5"
+    },
+    "SetBlockData": {
+      "rva": "0x1d1d58",
+      "preimage": "48895c240848896c2410488974241857"
+    },
+    "GetBlockColors": {
+      "rva": "0x1d1378",
+      "preimage": "4055488bec4883ec60488b05387b3600"
+    },
+    "BlockWidth": {
+      "rva": "0x1d1470",
+      "preimage": "4883ec58488b05457a36004833c44889"
+    },
+    "SwitchChart": {
+      "rva": "0x1c61b8",
+      "preimage": "48895c240848896c2410488974241857"
+    },
+    "GetCpuIdList": {
+      "rva": "0xa1e80",
+      "preimage": "488bc444894018488948085356574154"
+    }
+  }
+}
