@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 namespace Profile {
+constexpr uint32_t ViewDestructor=0x11758c;
+constexpr uint8_t ViewDestructorBytes[16]={72,137,92,36,8,87,72,131,236,32,72,141,5,243,5,26};
 constexpr uint32_t Timestamp=2253439176,ImageSize=5795840;
 constexpr uint32_t LoadLogical=0x1c54f0;
 constexpr uint32_t ViewUpdate=0xac00;

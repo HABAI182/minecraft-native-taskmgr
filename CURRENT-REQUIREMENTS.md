@@ -32,3 +32,6 @@ Minecraft 游戏线程与独立帧缓冲
 - https://maven.fabricmc.net/docs/yarn-1.21.1+build.3/net/minecraft/client/MinecraftClient.html
 
 本机需要适配的 Taskmgr.exe 文件版本为 10.0.26100.9549，操作系统 build 为 26300。两者不能混为同一个版本号，也不能套用旧 19041/22000 的函数偏移。
+
+
+0.2.0 追加要求：其他电脑无需编译器或 Python；按实际 Taskmgr 文件身份自动匹配微软符号、缓存并验证布局，未知 ABI 必须在注入前拒绝。不得把多版本静态 PE/PDB 检查称为跨系统实机验收。见 COMPATIBILITY-0.2.0.md。

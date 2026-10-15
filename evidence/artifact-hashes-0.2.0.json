@@ -1,0 +1,18 @@
+{
+  "client": {
+    "bytes": 1034240,
+    "sha256": "d39b4d8c035ccb9c625635a2a58833c1084dc1c6996583c039aa69bf4093ea53"
+  },
+  "embedded_bridge": {
+    "bytes": 157696,
+    "sha256": "56cbc245922e9193933c44ffb7d9ca952b8cdf72a0de08f956e82187838be9e5"
+  },
+  "fabric-api-0.116.17+1.21.1.jar": {
+    "bytes": 2452735,
+    "sha256": "79ac44b40780acbd884b34c50be1e39af682847e5f5cb3b1fddeeaa768dce800"
+  },
+  "mc-native-taskmgr-0.1.0.jar": {
+    "bytes": 19959,
+    "sha256": "00c07ab478df5c71698a8dcac12d8eebc4057c49a0a0dd02d05403c14b3d002e"
+  }
+}

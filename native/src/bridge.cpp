@@ -1,5 +1,5 @@
 #include "protocol.h"
-#include "profile.h"
+#include "runtime_profile.h"
 #include "heatmap_geometry.h"
 #include "MinHook.h"
 #include <commctrl.h>
@@ -11,6 +11,7 @@
 #include <stdexcept>
 
 namespace {
+NativeProfile profile{};
 HMODULE module;uintptr_t base;SharedState* state=nullptr;HWND window=nullptr;
 HANDLE stopEvent=nullptr,frameMutex=nullptr;
 HHOOK bootstrap=nullptr,inputHook=nullptr;
@@ -20,7 +21,6 @@ constexpr UINT_PTR Timer=0x4d434e54,Subclass=0x4d434e54;
 thread_local bool expanding=false;
 thread_local bool layingOut=false;
 using One=HRESULT(__fastcall*)(void*);
-using Count=uint16_t(__fastcall*)(void*);
 using NumaList=HRESULT(__fastcall*)(void*,void*,ULONG);
 using SwitchChart=HRESULT(__fastcall*)(void*,int,bool);
 using Initialize=HRESULT(__fastcall*)(void*,void*,void*,void*,const void*);
@@ -29,7 +29,7 @@ using Block=HRESULT(__fastcall*)(void*,UINT,const wchar_t*,ULONG,ULONG);
 using Colors=void(__fastcall*)(void*,int,ULONG*,ULONG*);
 One originalLoad=nullptr,originalUpdate=nullptr,originalLayout=nullptr,originalViewUpdate=nullptr;
 SwitchChart originalSwitch=nullptr;
-Count originalCount=nullptr;Initialize originalInitialize=nullptr;Destructor originalDestructor=nullptr;
+Initialize originalInitialize=nullptr;Destructor originalDestructor=nullptr,originalViewDestructor=nullptr;
 Block setBlock=nullptr;Colors getColors=nullptr;
 struct Call{Call(){++calls;}~Call(){--calls;}};
 struct BitArray{uint32_t count,padding;uint8_t* bytes;};
@@ -71,16 +71,32 @@ HRESULT __fastcall UpdateHook(void* self);
 HRESULT RenderFailure(HRESULT hr){state->renderHresult=hr;state->renderStage=RenderError;return hr;}
 
 void CheckProfile(){
+    profile=state->profile;
     auto dos=reinterpret_cast<IMAGE_DOS_HEADER*>(base);
+    if(dos->e_magic!=IMAGE_DOS_SIGNATURE||dos->e_lfanew<=0||dos->e_lfanew>0x100000)throw std::runtime_error("Invalid Taskmgr image");
     auto pe=reinterpret_cast<IMAGE_NT_HEADERS64*>(base+dos->e_lfanew);
-    if(dos->e_magic!=IMAGE_DOS_SIGNATURE||pe->Signature!=IMAGE_NT_SIGNATURE||
-       pe->FileHeader.TimeDateStamp!=Profile::Timestamp||pe->OptionalHeader.SizeOfImage!=Profile::ImageSize)
-        throw std::runtime_error("Unsupported Taskmgr binary");
-#define VERIFY(n) if(memcmp(reinterpret_cast<void*>(base+Profile::n),Profile::n##Bytes,16)!=0)throw std::runtime_error("Taskmgr preimage mismatch")
-    VERIFY(LoadLogical);VERIFY(LogicalCount);VERIFY(Initialize);VERIFY(UpdateData);
-    VERIFY(Layout);VERIFY(Destructor);VERIFY(SetBlockData);VERIFY(GetBlockColors);
-    VERIFY(SwitchChart);VERIFY(LoadHeatMap);VERIFY(GetCpuIdList);VERIFY(ViewUpdate);VERIFY(DeleteObject);
-#undef VERIFY
+    if(profile.schema!=1||pe->Signature!=IMAGE_NT_SIGNATURE||pe->FileHeader.Machine!=IMAGE_FILE_MACHINE_AMD64||
+       pe->FileHeader.TimeDateStamp!=profile.timestamp||pe->OptionalHeader.SizeOfImage!=profile.imageSize)
+        throw std::runtime_error("Taskmgr changed after compatibility check");
+    if(!profile.globalSettings||uint64_t(profile.globalSettings)+profile.countOffset+2>profile.imageSize||
+       profile.countOffset>0x10000||profile.viewHeatmapOffset<0x80||profile.viewHeatmapOffset>=0x1000||profile.viewHeatmapOffset%8||
+       profile.viewModeOffset<0x80||profile.viewModeOffset>=0x1000||profile.viewModeOffset%4)throw std::runtime_error("Invalid native member layout");
+    for(size_t i=0;i<kNativeFunctions;i++){
+        auto& entry=profile.entries[i];
+        if((i==size_t(NativeFn::LogicalCount)||i==size_t(NativeFn::Destructor))&&!entry.rva)continue;
+        if(!entry.rva||uint64_t(entry.rva)+16>profile.imageSize||memcmp(reinterpret_cast<void*>(base+entry.rva),entry.preimage,16)!=0)
+            throw std::runtime_error("Taskmgr instructions changed after compatibility check");
+    }
+    bool matched=false;auto debug=pe->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG];
+    if(uint64_t(debug.VirtualAddress)+debug.Size>profile.imageSize)throw std::runtime_error("Invalid debug directory");
+    for(uint32_t pos=0;pos+sizeof(IMAGE_DEBUG_DIRECTORY)<=debug.Size;pos+=sizeof(IMAGE_DEBUG_DIRECTORY)){
+        auto d=reinterpret_cast<IMAGE_DEBUG_DIRECTORY*>(base+debug.VirtualAddress+pos);
+        if(d->Type!=IMAGE_DEBUG_TYPE_CODEVIEW||d->SizeOfData<24||uint64_t(d->AddressOfRawData)+d->SizeOfData>profile.imageSize)continue;
+        auto cv=reinterpret_cast<const uint8_t*>(base+d->AddressOfRawData);GUID guid{};uint32_t age=0;
+        if(memcmp(cv,"RSDS",4)!=0)continue;memcpy(&guid,cv+4,16);memcpy(&age,cv+20,4);
+        matched=IsEqualGUID(guid,profile.pdbGuid)&&age==profile.pdbAge;
+    }
+    if(!matched)throw std::runtime_error("Taskmgr PDB identity changed after compatibility check");
 }
 void ResolveDui(){
     extent=Dui<GetExtent>("?GetExtent@Element@DirectUI@@QEAAPEBUtagSIZE@@PEAPEAVValue@2@@Z");
@@ -145,28 +161,34 @@ HRESULT DiscardHeatmap(void* view,void* object){
     // DestroyAll first detaches every child, then lets DirectUI destroy it safely.
     HRESULT hr=container?destroyAll(container,true):S_OK;
     if(FAILED(hr))return hr;
-    Field<void*>(view,0x150)=nullptr;
-    originalDestructor(object);
+    Field<void*>(view,profile.viewHeatmapOffset)=nullptr;
+    if(originalDestructor)originalDestructor(object);
+    else{
+        auto nativeDeleteArray=Function<void(__fastcall*)(void*)>(profile[NativeFn::DeleteArray].rva);
+        nativeDeleteArray(Field<void*>(object,0));
+        nativeDeleteArray(Field<void*>(object,0x18));
+    }
     // Use the same native sized-delete entry as AtmCpuView::~AtmCpuView.
-    Function<void(__fastcall*)(void*,size_t)>(Profile::DeleteObject)(object,0x30);
+    Function<void(__fastcall*)(void*,size_t)>(profile[NativeFn::DeleteObject].rva)(object,0x30);
     return S_OK;
 }
 HRESULT __fastcall LoadHook(void* self){
     Call call;
     if(!enabled)return originalLoad(self);
     if(model.object)return S_OK;
-    HRESULT discarded=DiscardHeatmap(self,Field<void*>(self,0x150));
+    HRESULT discarded=DiscardHeatmap(self,Field<void*>(self,profile.viewHeatmapOffset));
     if(FAILED(discarded))return RenderFailure(discarded);
     // 不 Hook 小型计数 getter。Taskmgr 的内部调用者依赖其保留部分易失寄存器；
     // 普通 C++ detour 会破坏这种二进制内部约定，波及功耗计算线程。
-    model.realCount=originalCount(reinterpret_cast<void*>(base+0x5420d0));
+    model.realCount=std::max<uint16_t>(1,Field<uint16_t>(reinterpret_cast<void*>(base+profile.globalSettings),profile.countOffset));
+    if(model.realCount>kPixels)return RenderFailure(HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED));
     std::array<uint32_t,kPixels> numa{};
-    auto getIds=Function<NumaList>(Profile::GetCpuIdList);
+    auto getIds=Function<NumaList>(profile[NativeFn::GetCpuIdList].rva);
     HRESULT hr=getIds(self,numa.data(),model.realCount);
     if(FAILED(hr))return hr;
     // 直接进入原生热力图创建路径；原版 getter 与全局核心数完全保持原值。
     // 只在 Initialize 的已确认实例上扩容，NUMA 数组也同步提供等长存储。
-    auto loadHeatMap=Function<HRESULT(__fastcall*)(void*,void*)>(Profile::LoadHeatMap);
+    auto loadHeatMap=Function<HRESULT(__fastcall*)(void*,void*)>(profile[NativeFn::LoadHeatMap].rva);
     model.view=self;
     expanding=true;hr=loadHeatMap(self,numa.data());expanding=false;return hr;
 }
@@ -174,7 +196,7 @@ HRESULT __fastcall SwitchHook(void* self,int mode,bool redraw){
     Call call;
     if(!enabled)return originalSwitch(self,mode,redraw);
     if(mode==1||mode==3){
-        if(!model.object){model.restoreMode=int(Field<uint32_t>(self,0x288));HRESULT hr=LoadHook(self);if(FAILED(hr))return hr;}
+        if(!model.object){model.restoreMode=int(Field<uint32_t>(self,profile.viewModeOffset));HRESULT hr=LoadHook(self);if(FAILED(hr))return hr;}
         mode=3; // 让原生 UI 显示热力图，并走原生 CPU_HEATMAP 更新分支。
     }
     HRESULT hr=originalSwitch(self,mode,redraw);
@@ -213,6 +235,17 @@ void __fastcall DestructorHook(void* self){
     Call call;
     if(self==model.object){Field<void*>(self,0x28)=model.originalBits;model.object=nullptr;model.view=nullptr;model.shown=false;model.layoutReady=false;state->renderStage=AwaitChart;InterlockedExchange(&state->nativeCells,0);Control(false);}
     originalDestructor(self);
+}
+void __fastcall ViewDestructorHook(void* self){
+    Call call;
+    // This also covers builds where the heatmap destructor is inlined here.
+    // Restore the borrowed parking bitmap before the view frees native arrays.
+    if(self==model.view&&model.object){
+        Field<void*>(model.object,0x28)=model.originalBits;
+        model.object=nullptr;model.view=nullptr;model.shown=false;model.layoutReady=false;
+        state->renderStage=AwaitChart;InterlockedExchange(&state->nativeCells,0);Control(false);
+    }
+    originalViewDestructor(self);
 }
 HRESULT __fastcall LayoutHook(void* self){
     Call call;
@@ -384,11 +417,10 @@ void RestoreModel(){
     if(view){
         if(model.restoreMode==3){
             std::array<uint32_t,kPixels> ids{};
-            Function<NumaList>(Profile::GetCpuIdList)(view,ids.data(),model.realCount);
-            Function<HRESULT(__fastcall*)(void*,void*)>(Profile::LoadHeatMap)(view,ids.data());
+            Function<NumaList>(profile[NativeFn::GetCpuIdList].rva)(view,ids.data(),model.realCount);
+            Function<HRESULT(__fastcall*)(void*,void*)>(profile[NativeFn::LoadHeatMap].rva)(view,ids.data());
         }
         // 热力图与原版曲线可以同时存在；确保恢复的图表确实已创建。
-        if(model.restoreMode==1&&!Field<void*>(view,0x140))originalLoad(view);
         originalSwitch(view,model.restoreMode,false);
     }
 }
@@ -436,14 +468,15 @@ extern "C" __declspec(dllexport) DWORD WINAPI RunBridge(void* argument){
         window=reinterpret_cast<HWND>(state->targetHwnd);base=reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr));
         if(!ready||!stopEvent||!frameMutex)throw std::runtime_error("IPC unavailable");
         CheckProfile();ResolveDui();
-        setBlock=Function<Block>(Profile::SetBlockData);getColors=Function<Colors>(Profile::GetBlockColors);
-        originalCount=Function<Count>(Profile::LogicalCount);
+        setBlock=Function<Block>(profile[NativeFn::SetBlockData].rva);getColors=Function<Colors>(profile[NativeFn::GetBlockColors].rva);
         if(MH_Initialize()!=MH_OK)throw std::runtime_error("MinHook busy");hooks=true;
-        Hook(Profile::LoadLogical,LoadHook,&originalLoad);
-        Hook(Profile::Initialize,InitializeHook,&originalInitialize);Hook(Profile::Destructor,DestructorHook,&originalDestructor);
-        Hook(Profile::Layout,LayoutHook,&originalLayout);Hook(Profile::UpdateData,UpdateHook,&originalUpdate);
-        Hook(Profile::SwitchChart,SwitchHook,&originalSwitch);
-        Hook(Profile::ViewUpdate,ViewUpdateHook,&originalViewUpdate);
+        Hook(profile[NativeFn::LoadLogical].rva,LoadHook,&originalLoad);
+        Hook(profile[NativeFn::Initialize].rva,InitializeHook,&originalInitialize);
+        if(profile[NativeFn::Destructor].rva)Hook(profile[NativeFn::Destructor].rva,DestructorHook,&originalDestructor);
+        Hook(profile[NativeFn::ViewDestructor].rva,ViewDestructorHook,&originalViewDestructor);
+        Hook(profile[NativeFn::Layout].rva,LayoutHook,&originalLayout);Hook(profile[NativeFn::UpdateData].rva,UpdateHook,&originalUpdate);
+        Hook(profile[NativeFn::SwitchChart].rva,SwitchHook,&originalSwitch);
+        Hook(profile[NativeFn::ViewUpdate].rva,ViewUpdateHook,&originalViewUpdate);
         enabled=true;if(MH_EnableHook(MH_ALL_HOOKS)!=MH_OK)throw std::runtime_error("Cannot enable hooks");
         DWORD thread=GetWindowThreadProcessId(window,nullptr);
         bootstrap=SetWindowsHookExW(WH_CALLWNDPROC,Bootstrap,module,thread);

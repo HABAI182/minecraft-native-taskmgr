@@ -30,7 +30,7 @@ public:
     Session(const Session&)=delete;
     Session& operator=(const Session&)=delete;
     ~Session();
-    void Start(HWND target, HWND source, RECT area, const std::wstring& dllPath, bool fixture=false, bool ownsFile=true);
+    void Start(HWND target, HWND source, RECT area, const std::wstring& dllPath, const NativeProfile& profile, bool fixture=false, bool ownsFile=true);
     void Heartbeat();
     void RequestStop();
     bool Ended() const;

@@ -1,0 +1,607 @@
+{
+  "passed": true,
+  "test_kind": "static_pe_pdb_abi_trampoline_only",
+  "cross_os_runtime_tested": false,
+  "fixtures": [
+    {
+      "compatible": true,
+      "file_version": "10.0.19041.7664",
+      "method": "microsoft_symbols_cached",
+      "pdb_key": "34C6CFE036E12A65E6F8919439547C7A1",
+      "sha256": "f926d969f1eab1ef5b89c62603f81e27941e21ba999eaecb39b72621a0768674",
+      "runtime_tested": false,
+      "global_settings": 1292784,
+      "count_offset": 2372,
+      "heatmap_offset": 336,
+      "mode_offset": 648,
+      "functions": {
+        "LoadLogical": {
+          "rva": 780372,
+          "preimage": "48895c240848896c2418488974242057"
+        },
+        "LoadHeatMap": {
+          "rva": 780136,
+          "preimage": "48895c241048896c2418488974242057"
+        },
+        "LogicalCount": {
+          "rva": 0,
+          "preimage": "00000000000000000000000000000000"
+        },
+        "Initialize": {
+          "rva": 923868,
+          "preimage": "48895c241048896c2418488974242057"
+        },
+        "UpdateData": {
+          "rva": 925912,
+          "preimage": "48895c2410488974241855574156488d"
+        },
+        "Layout": {
+          "rva": 924428,
+          "preimage": "488bc44889581848897020574883ec30"
+        },
+        "Destructor": {
+          "rva": 0,
+          "preimage": "00000000000000000000000000000000"
+        },
+        "SetBlockData": {
+          "rva": 925568,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetBlockColors": {
+          "rva": 922984,
+          "preimage": "48895c24084889742410574883ec2065"
+        },
+        "SwitchChart": {
+          "rva": 784848,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetCpuIdList": {
+          "rva": 776444,
+          "preimage": "488bc448895810488948085556574154"
+        },
+        "ViewUpdate": {
+          "rva": 785904,
+          "preimage": "48895c2408574883ec20488bd9e81e07"
+        },
+        "DeleteObject": {
+          "rva": 220460,
+          "preimage": "e95b050000cccccccccccccccccccccc"
+        },
+        "ViewDestructor": {
+          "rva": 775944,
+          "preimage": "48895c2408574883ec20488d052fec02"
+        },
+        "DeleteArray": {
+          "rva": 220460,
+          "preimage": "e95b050000cccccccccccccccccccccc"
+        }
+      },
+      "all_trampolines": true,
+      "trampoline_count": 7,
+      "injected": false,
+      "exit_code": 0,
+      "fixture_version": "10.0.19041.7663",
+      "source": "https://msdl.microsoft.com/download/symbols/Taskmgr.exe/0EE355F0151000/Taskmgr.exe"
+    },
+    {
+      "compatible": true,
+      "file_version": "10.0.19041.84",
+      "method": "microsoft_symbols_cached",
+      "pdb_key": "12D2A5FD8E9D1C73D07D1C1077725E6E1",
+      "sha256": "9095106c3229e14fb7f2b61f45abf93e9b51f0cdab4540b5e8fb9df1ea399ed4",
+      "runtime_tested": false,
+      "global_settings": 1161760,
+      "count_offset": 2372,
+      "heatmap_offset": 336,
+      "mode_offset": 648,
+      "functions": {
+        "LoadLogical": {
+          "rva": 680628,
+          "preimage": "48895c240848896c2418488974242057"
+        },
+        "LoadHeatMap": {
+          "rva": 680392,
+          "preimage": "48895c241048896c2418488974242057"
+        },
+        "LogicalCount": {
+          "rva": 0,
+          "preimage": "00000000000000000000000000000000"
+        },
+        "Initialize": {
+          "rva": 823980,
+          "preimage": "48895c241048896c2418488974242057"
+        },
+        "UpdateData": {
+          "rva": 826024,
+          "preimage": "48895c2410488974241855574156488d"
+        },
+        "Layout": {
+          "rva": 824540,
+          "preimage": "488bc44889581848897020574883ec30"
+        },
+        "Destructor": {
+          "rva": 0,
+          "preimage": "00000000000000000000000000000000"
+        },
+        "SetBlockData": {
+          "rva": 825680,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetBlockColors": {
+          "rva": 823096,
+          "preimage": "48895c24084889742410574883ec2065"
+        },
+        "SwitchChart": {
+          "rva": 685104,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetCpuIdList": {
+          "rva": 676700,
+          "preimage": "488bc448895810488948085556574154"
+        },
+        "ViewUpdate": {
+          "rva": 686160,
+          "preimage": "48895c2408574883ec20488bd9e81e07"
+        },
+        "DeleteObject": {
+          "rva": 209228,
+          "preimage": "e95b050000cccccccccccccccccccccc"
+        },
+        "ViewDestructor": {
+          "rva": 676200,
+          "preimage": "48895c2408574883ec20488d057fec02"
+        },
+        "DeleteArray": {
+          "rva": 209228,
+          "preimage": "e95b050000cccccccccccccccccccccc"
+        }
+      },
+      "all_trampolines": true,
+      "trampoline_count": 7,
+      "injected": false,
+      "exit_code": 0,
+      "fixture_version": "10.0.19041.84",
+      "source": "https://msdl.microsoft.com/download/symbols/Taskmgr.exe/F946A48F130000/Taskmgr.exe"
+    },
+    {
+      "compatible": true,
+      "file_version": "10.0.22000.2836",
+      "method": "microsoft_symbols_cached",
+      "pdb_key": "FD7C8B24D7AEBC4F94966CBF85750B511",
+      "sha256": "b8c0718ca639d1f0a27117370c82a8014843d108759883fb46102994fdd9a800",
+      "runtime_tested": false,
+      "global_settings": 1413488,
+      "count_offset": 2372,
+      "heatmap_offset": 336,
+      "mode_offset": 648,
+      "functions": {
+        "LoadLogical": {
+          "rva": 878688,
+          "preimage": "48895c240848896c2418488974242057"
+        },
+        "LoadHeatMap": {
+          "rva": 878452,
+          "preimage": "48895c241048896c2418488974242057"
+        },
+        "LogicalCount": {
+          "rva": 0,
+          "preimage": "00000000000000000000000000000000"
+        },
+        "Initialize": {
+          "rva": 988516,
+          "preimage": "48895c241048896c2418565741564883"
+        },
+        "UpdateData": {
+          "rva": 990488,
+          "preimage": "48895c2410488974241855574156488d"
+        },
+        "Layout": {
+          "rva": 988984,
+          "preimage": "488bc44889581848897020574883ec30"
+        },
+        "Destructor": {
+          "rva": 0,
+          "preimage": "00000000000000000000000000000000"
+        },
+        "SetBlockData": {
+          "rva": 990144,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetBlockColors": {
+          "rva": 987612,
+          "preimage": "48895c24084889742410574883ec2065"
+        },
+        "SwitchChart": {
+          "rva": 326488,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetCpuIdList": {
+          "rva": 877740,
+          "preimage": "488bc448895810448940184889480855"
+        },
+        "ViewUpdate": {
+          "rva": 120960,
+          "preimage": "48895c2408574883ec20488bd9e8bae6"
+        },
+        "DeleteObject": {
+          "rva": 363756,
+          "preimage": "e9f3040000cccccccccccccc7130525e"
+        },
+        "ViewDestructor": {
+          "rva": 877420,
+          "preimage": "48895c2408574883ec20488d055bc102"
+        },
+        "DeleteArray": {
+          "rva": 364864,
+          "preimage": "e99f000000cccccccccccccce997feff"
+        }
+      },
+      "all_trampolines": true,
+      "trampoline_count": 7,
+      "injected": false,
+      "exit_code": 0,
+      "fixture_version": "10.0.22000.2600",
+      "source": "https://msdl.microsoft.com/download/symbols/Taskmgr.exe/394B21C8170000/Taskmgr.exe"
+    },
+    {
+      "compatible": true,
+      "file_version": "10.0.22621.6197",
+      "method": "microsoft_symbols_cached",
+      "pdb_key": "7483F7CD32D14C74EBF975E76A317F951",
+      "sha256": "5654c468656763506fd53479d620d99bdcbda3981d34e4507901ef65eb2b9b25",
+      "runtime_tested": false,
+      "global_settings": 5169872,
+      "count_offset": 2368,
+      "heatmap_offset": 336,
+      "mode_offset": 648,
+      "functions": {
+        "LoadLogical": {
+          "rva": 1338936,
+          "preimage": "48895c2408488974241848897c242041"
+        },
+        "LoadHeatMap": {
+          "rva": 1338708,
+          "preimage": "48895c24104889742418574883ec3048"
+        },
+        "LogicalCount": {
+          "rva": 320736,
+          "preimage": "0fb78140090000b9010000006685c066"
+        },
+        "Initialize": {
+          "rva": 1437060,
+          "preimage": "48895c241048896c2418565741544156"
+        },
+        "UpdateData": {
+          "rva": 1439136,
+          "preimage": "48895c2410488974241855574156488d"
+        },
+        "Layout": {
+          "rva": 1437616,
+          "preimage": "488bc44889581848897020574883ec30"
+        },
+        "Destructor": {
+          "rva": 1436224,
+          "preimage": "40534883ec20488bd9488b09e83716f3"
+        },
+        "SetBlockData": {
+          "rva": 1438792,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetBlockColors": {
+          "rva": 1436264,
+          "preimage": "4055488bec4883ec60488b05f8843800"
+        },
+        "SwitchChart": {
+          "rva": 1344432,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetCpuIdList": {
+          "rva": 1334980,
+          "preimage": "488bc444894018488948085356574154"
+        },
+        "ViewUpdate": {
+          "rva": 1345440,
+          "preimage": "48895c2408574883ec20488bd9e8fe06"
+        },
+        "DeleteObject": {
+          "rva": 588196,
+          "preimage": "e95b070000cccccccccccccc40534883"
+        },
+        "ViewDestructor": {
+          "rva": 1333968,
+          "preimage": "48895c2408574883ec20488d05d73f14"
+        },
+        "DeleteArray": {
+          "rva": 589960,
+          "preimage": "e977000000cccccccccccccce913fcff"
+        }
+      },
+      "all_trampolines": true,
+      "trampoline_count": 8,
+      "injected": false,
+      "exit_code": 0,
+      "fixture_version": "10.0.22621.6133",
+      "source": "https://msdl.microsoft.com/download/symbols/Taskmgr.exe/69383DA752c000/Taskmgr.exe"
+    },
+    {
+      "compatible": true,
+      "file_version": "10.0.26100.1",
+      "method": "microsoft_symbols_cached",
+      "pdb_key": "4E34B272C024659925E230C7E98A622B1",
+      "sha256": "994d144a4b395eb979fb9d16d1b2c5533b2a2847a057cb832446e8836703af1c",
+      "runtime_tested": false,
+      "global_settings": 4979008,
+      "count_offset": 2360,
+      "heatmap_offset": 336,
+      "mode_offset": 648,
+      "functions": {
+        "LoadLogical": {
+          "rva": 1584872,
+          "preimage": "48895c2408488974241848897c242041"
+        },
+        "LoadHeatMap": {
+          "rva": 1584644,
+          "preimage": "48895c24104889742418574883ec3048"
+        },
+        "LogicalCount": {
+          "rva": 716920,
+          "preimage": "0fb781380900006685c07402c3ccb801"
+        },
+        "Initialize": {
+          "rva": 1682224,
+          "preimage": "48895c241048896c2418565741544156"
+        },
+        "UpdateData": {
+          "rva": 1684308,
+          "preimage": "48895c2410488974241855574157488d"
+        },
+        "Layout": {
+          "rva": 1682780,
+          "preimage": "488bc44889581848897020574883ec30"
+        },
+        "Destructor": {
+          "rva": 1681404,
+          "preimage": "40534883ec20488bd9488b09e81ffbf8"
+        },
+        "SetBlockData": {
+          "rva": 1683964,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetBlockColors": {
+          "rva": 1681444,
+          "preimage": "4055488bec4883ec60488b058cdf3100"
+        },
+        "SwitchChart": {
+          "rva": 1024076,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetCpuIdList": {
+          "rva": 1583308,
+          "preimage": "488bc444894018488948085356574154"
+        },
+        "ViewUpdate": {
+          "rva": 369952,
+          "preimage": "48895c2408574883ec20488bd9e89e15"
+        },
+        "DeleteObject": {
+          "rva": 1221420,
+          "preimage": "e92f070000cccccccccccccccccccccc"
+        },
+        "ViewDestructor": {
+          "rva": 1161148,
+          "preimage": "48895c2408574883ec20488d05ab4215"
+        },
+        "DeleteArray": {
+          "rva": 1221420,
+          "preimage": "e92f070000cccccccccccccccccccccc"
+        }
+      },
+      "all_trampolines": true,
+      "trampoline_count": 8,
+      "injected": false,
+      "exit_code": 0,
+      "fixture_version": "10.0.26100.1",
+      "source": "https://msdl.microsoft.com/download/symbols/Taskmgr.exe/84C080494ff000/Taskmgr.exe"
+    },
+    {
+      "compatible": true,
+      "file_version": "10.0.26100.9549",
+      "method": "microsoft_symbols_cached",
+      "pdb_key": "6A6407A6B6406A9FA551C3A72B1926491",
+      "sha256": "8215acab6fb1c747279954fdf55c05e915381fc32f8b9e996c54eecf189f1227",
+      "runtime_tested": false,
+      "global_settings": 5513424,
+      "count_offset": 2360,
+      "heatmap_offset": 336,
+      "mode_offset": 648,
+      "functions": {
+        "LoadLogical": {
+          "rva": 1856752,
+          "preimage": "48895c2408488974241848897c242041"
+        },
+        "LoadHeatMap": {
+          "rva": 1856524,
+          "preimage": "48895c24104889742418574883ec3048"
+        },
+        "LogicalCount": {
+          "rva": 477912,
+          "preimage": "0fb781380900006685c07402c3ccb801"
+        },
+        "Initialize": {
+          "rva": 1906308,
+          "preimage": "48895c241048896c2418565741544156"
+        },
+        "UpdateData": {
+          "rva": 1908400,
+          "preimage": "48895c2410488974241855574157488d"
+        },
+        "Layout": {
+          "rva": 1906864,
+          "preimage": "488bc44889581848897020574883ec30"
+        },
+        "Destructor": {
+          "rva": 1905488,
+          "preimage": "40534883ec20488bd9488b09e87b3af5"
+        },
+        "SetBlockData": {
+          "rva": 1908056,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetBlockColors": {
+          "rva": 1905528,
+          "preimage": "4055488bec4883ec60488b05387b3600"
+        },
+        "SwitchChart": {
+          "rva": 1860024,
+          "preimage": "48895c240848896c2410488974241857"
+        },
+        "GetCpuIdList": {
+          "rva": 663168,
+          "preimage": "488bc444894018488948085356574154"
+        },
+        "ViewUpdate": {
+          "rva": 44032,
+          "preimage": "48895c2408574883ec20488bd9e86204"
+        },
+        "DeleteObject": {
+          "rva": 1199580,
+          "preimage": "e92f070000cccccccccccccccccccccc"
+        },
+        "ViewDestructor": {
+          "rva": 1144204,
+          "preimage": "48895c2408574883ec20488d05f3051a"
+        },
+        "DeleteArray": {
+          "rva": 1199580,
+          "preimage": "e92f070000cccccccccccccccccccccc"
+        }
+      },
+      "all_trampolines": true,
+      "trampoline_count": 8,
+      "injected": false,
+      "exit_code": 0
+    }
+  ],
+  "rejection_tests": [
+    {
+      "case": "invalid_pe",
+      "error": "invalid_image",
+      "injected": false,
+      "passed": true
+    },
+    {
+      "case": "arm64_image",
+      "error": "architecture",
+      "injected": false,
+      "passed": true
+    },
+    {
+      "case": "wrong_pdb_guid",
+      "error": "pdb_identity",
+      "injected": false,
+      "passed": true
+    },
+    {
+      "case": "truncated_pdb",
+      "error": "pdb_identity",
+      "injected": false,
+      "passed": true
+    },
+    {
+      "case": "offline_without_cache",
+      "error": "offline_cache_miss",
+      "injected": false,
+      "passed": true
+    },
+    {
+      "case": "cancel_before_matching",
+      "error": "cancelled",
+      "injected": false,
+      "passed": true
+    },
+    {
+      "case": "changed_heatmap_size",
+      "error": "unsupported_layout:heatmap_allocation_size",
+      "injected": false,
+      "passed": true
+    }
+  ],
+  "embedded_profile": {
+    "compatible": true,
+    "file_version": "10.0.26100.9549",
+    "method": "embedded_verified_profile",
+    "pdb_key": "6A6407A6B6406A9FA551C3A72B1926491",
+    "sha256": "8215acab6fb1c747279954fdf55c05e915381fc32f8b9e996c54eecf189f1227",
+    "runtime_tested": false,
+    "global_settings": 5513424,
+    "count_offset": 2360,
+    "heatmap_offset": 336,
+    "mode_offset": 648,
+    "functions": {
+      "LoadLogical": {
+        "rva": 1856752,
+        "preimage": "48895c2408488974241848897c242041"
+      },
+      "LoadHeatMap": {
+        "rva": 1856524,
+        "preimage": "48895c24104889742418574883ec3048"
+      },
+      "LogicalCount": {
+        "rva": 477912,
+        "preimage": "0fb781380900006685c07402c3ccb801"
+      },
+      "Initialize": {
+        "rva": 1906308,
+        "preimage": "48895c241048896c2418565741544156"
+      },
+      "UpdateData": {
+        "rva": 1908400,
+        "preimage": "48895c2410488974241855574157488d"
+      },
+      "Layout": {
+        "rva": 1906864,
+        "preimage": "488bc44889581848897020574883ec30"
+      },
+      "Destructor": {
+        "rva": 1905488,
+        "preimage": "40534883ec20488bd9488b09e87b3af5"
+      },
+      "SetBlockData": {
+        "rva": 1908056,
+        "preimage": "48895c240848896c2410488974241857"
+      },
+      "GetBlockColors": {
+        "rva": 1905528,
+        "preimage": "4055488bec4883ec60488b05387b3600"
+      },
+      "SwitchChart": {
+        "rva": 1860024,
+        "preimage": "48895c240848896c2410488974241857"
+      },
+      "GetCpuIdList": {
+        "rva": 663168,
+        "preimage": "488bc444894018488948085356574154"
+      },
+      "ViewUpdate": {
+        "rva": 44032,
+        "preimage": "48895c2408574883ec20488bd9e86204"
+      },
+      "DeleteObject": {
+        "rva": 1199580,
+        "preimage": "e92f070000cccccccccccccccccccccc"
+      },
+      "ViewDestructor": {
+        "rva": 1144204,
+        "preimage": "48895c2408574883ec20488d05f3051a"
+      },
+      "DeleteArray": {
+        "rva": 1199580,
+        "preimage": "e92f070000cccccccccccccccccccccc"
+      }
+    },
+    "all_trampolines": true,
+    "trampoline_count": 8,
+    "injected": false,
+    "exit_code": 0
+  }
+}

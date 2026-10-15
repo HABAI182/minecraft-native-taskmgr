@@ -1,5 +1,5 @@
 {
-  "native_client_version": "0.1.2",
+  "native_client_version": "0.2.0",
   "minecraft": "1.21.1",
   "loader": "Fabric 0.16.14",
   "taskmgr_file_version": "10.0.26100.9549",
@@ -17,9 +17,14 @@
   "taskmgr_native_display_fps_verified": true,
   "taskmgr_restore_layout_end_to_end_verified": true,
   "overall_complete": true,
-  "taskmgr_game_input_verification": "user confirmation: scene changes visible after requested F8/Esc/WASD/mouse test",
-  "taskmgr_native_display_fps": 9.188889,
-  "taskmgr_native_render_test_seconds": 90.0,
+  "taskmgr_game_input_verification": "User confirmed 能操作 on 0.2.0 after F8/Esc/WASD/mouse request",
+  "taskmgr_native_display_fps": 8.676332,
+  "taskmgr_native_render_test_seconds": 90.015,
   "white_render_fix_complete": true,
-  "acceptance_scope": "This machine and the exact whitelisted Taskmgr.exe; basic native rendering and playability only. IME, shader mods and long sessions are not certified."
+  "acceptance_scope": "Native rendering and game input verified on this PC with Taskmgr 10.0.26100.9549. Five additional PE/PDB samples pass static ABI and trampoline checks only. Other PCs/OS runtime, ARM64, IME and shader mods are not certified.",
+  "automatic_symbol_matching": true,
+  "static_taskmgr_fixture_count": 6,
+  "negative_compatibility_tests": 7,
+  "cross_os_runtime_verified": false,
+  "game_mod_changed": false
 }
