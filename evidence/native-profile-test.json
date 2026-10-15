@@ -1,0 +1,9 @@
+{
+  "binary_profile": true,
+  "core_getter_untouched": true,
+  "volatile_registers_preserved": true,
+  "native_count_stays_32": true,
+  "restored": true,
+  "taskmgr_runtime": false,
+  "seven_trampolines": true
+}

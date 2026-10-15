@@ -1,0 +1,32 @@
+{
+  "invalid_token_rejected": true,
+  "actual_win32_is_iconic": true,
+  "minimized_game_status": {
+    "controlled": true,
+    "iconified": true,
+    "heldKeys": 0,
+    "screen": false,
+    "inWorld": true,
+    "x": -39.5,
+    "y": 73.0,
+    "z": 58.5,
+    "yaw": 0.0,
+    "pitch": 0.0
+  },
+  "minimized_export_fps": 18.998472522806974,
+  "distinct_minimized_frames": 38,
+  "movement_delta": 3.0080139251179503,
+  "yaw_delta": 6.000001,
+  "pitch_delta": 1.5000002,
+  "escape_opens_menu": true,
+  "escape_returns_to_world": true,
+  "focus_release_clears_keys": true,
+  "frame_dimensions": [
+    64,
+    36
+  ],
+  "held_key_before_disconnect": true,
+  "disconnect_releases_keys": true,
+  "game_bridge_passed": true,
+  "taskmgr_rendering_tested": false
+}

@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-15",
+  "source": "direct user confirmation in this conversation",
+  "initial_user_report": "Takeover, minimized capture and input states work; native CPU rendering is white.",
+  "latest_user_confirmation": "能看到场景变化",
+  "prompted_actions": [
+    "F8",
+    "Esc",
+    "WASD",
+    "mouse"
+  ],
+  "method": "user reported end-to-end scene changes; no separate automated measurement for each action",
+  "automatic_taskmgr_display_fps": 9.188889,
+  "native_game_visual_observed": true,
+  "saved_screenshot_note": "The saved native-game-renderer.jpg shows a Minecraft demo information screen in native heatmap cells; the user separately reported scene changes.",
+  "restore_cpu_chart_visually_observed": true,
+  "new_taskmgr_crashes_2026_10_15_0700_to_0738": 0
+}

@@ -1,0 +1,7 @@
+{
+  "required": true,
+  "package": "dev.mctaskmgr.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": ["ClientMixin", "MouseAccess", "KeyboardAccess", "MouseMixin", "InputMixin", "WindowMixin"],
+  "injectors": { "defaultRequire": 1 }
+}
