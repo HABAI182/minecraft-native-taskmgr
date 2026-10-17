@@ -158,3 +158,10 @@ cd native
 - 游戏 API：[Fabric API](https://github.com/FabricMC/fabric)、[Yarn 1.21.1](https://maven.fabricmc.net/docs/yarn-1.21.1+build.3/net/minecraft/client/MinecraftClient.html)。Fabric API 原始 JAR 保留其许可证文件。
 
 没有在包中分发 Minecraft 游戏程序、原版反编译源码、微软系统 DLL 或 PDB。
+
+
+## 安全边界与持续检查
+
+这是非微软官方的本机实验工具，会向当前本机 Taskmgr 进程加载桥接 DLL，运行可能触发 UAC；不保证系统更新后的 ABI 兼容。身份、前像、PDB 和布局检查失败时停止，不建议关闭杀毒或系统防护。F9/停止并恢复会撤销会话；异常时关闭客户端并重新打开任务管理器。版本识别与注入限制保留。
+
+[CI](.github/workflows/ci.yml) 只编译原生端、运行不依赖 Taskmgr 的 geometry CTest，并在 JDK 21 构建固定版本 Fabric 模组。CI 不启动游戏、不注入 Taskmgr，也不把六样本静态矩阵冒充跨系统实机验收。Gradle 8.10.2 分发已启用 URL 验证并固定 [官方 SHA256](https://services.gradle.org/distributions/gradle-8.10.2-bin.zip.sha256)；MinHook BSD 和 Zydis/Zycore MIT 许可保留。旧 Release 和 Tag 未修改。
