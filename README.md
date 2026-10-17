@@ -3,38 +3,11 @@
 固定游戏版本：**Java 1.21.1 + Fabric Loader 0.16.14 + Fabric API 0.116.17+1.21.1**。
 系统适配：**Windows x64，按本机 Taskmgr 的微软符号与实际布局自动匹配**。六个 Win10/11 文件样本通过静态检查；目前仅 10.0.26100.9549 完成本机原生渲染与操作验收。详细范围和排错见 [兼容性说明](COMPATIBILITY-0.2.0.md)。
 
-**本机再次验收：实际 Minecraft 内部帧在 MC 最小化时进入真实任务管理器的 2304 个 DirectUI 热力图单元，用户再次确认能操作并看到场景变化。动态匹配、停止恢复、DLL 卸载和核心数保持均有验收记录。跨系统静态检查不能替代跨系统实机测试。**
+## 下载
 
-已有模组不用换，只需更换客户 EXE。本版不修改游戏端取帧、最小化或输入代码。新增独立“检查兼容性”按钮、后台符号下载、离线缓存和可分享的失败报告。
+直接运行请下载 [v0.2.0 Release](https://github.com/HABAI182/minecraft-native-taskmgr/releases/tag/v0.2.0) 的完整 ZIP。源码保留 Gradle Wrapper、构建脚本、版本识别与注入防护。旧 Tag、Release 和附件原样保留；历史测试日志、截图和修复报告已移至私有镜像。
 
-## 下载与仓库结构
-
-直接运行请下载 [v0.2.0 Release](https://github.com/HABAI182/minecraft-native-taskmgr/releases/tag/v0.2.0) 中的完整 ZIP。Git 仓库包含源码、Gradle Wrapper 和验收记录；EXE、分发模组 JAR、调试符号与完整运行包放在 Release 附件中。
-
-## 0.2.0 兼容性改造
-
-首次按本机 Taskmgr 的 GUID/age 下载微软 PDB，使用内置反汇编器定位并核对内部对象布局，缓存后可离线使用。支持独立函数与旧版内联实现、冷热代码分离；失败时在注入前停止并给出具体原因。最终用户仍只运行一个 EXE。
-
-六个样本与七个拒绝测试的完整范围见 [COMPATIBILITY-0.2.0.md](COMPATIBILITY-0.2.0.md)。
-
-## 保留的 0.1.2 白屏修复
-
-- 显式显示原生内层热力图容器。实测初始化时它为隐藏状态，外层页面可见并不能让它自动显示。
-- 容器第一次布局的高度可能为零；不再提前放弃，UI 定时器继续重试布局。
-- 清除模板文字、缩小继承的字体行高，并清空边距、内边距和边框，避免原生百分比文字撑高格子。
-- 切换会话时用 DirectUI 的 DestroyAll 移除旧模板格子，再按 Taskmgr 自己的析构和分配器回收模型。只隐藏旧格子仍会占用 GridLayout 行数，导致新图被挤到下半区。
-- 监听原生 CPU 视图更新，打开“性能 → CPU”即可自动切入热力图，已缓存的图表也能接管，不再要求反复切换图形模式。
-- 客户端显示“等待布局 / 等待游戏帧 / 已绘制 / 绘制失败”，并在 `%LOCALAPPDATA%\MCNativeTaskmgr\renderer-live.json` 写入每秒一次的布局、亮度、调色板和刷新诊断。
-
-## 0.1.1 崩溃修复（本版保留）
-
-0.1.0 的全局 `GetProcessorDetailsLogicalCount` C++ Hook 不正确。原版函数是短小的内部 leaf 函数，原生调用者还依赖它保留 EDX、R8 等易失寄存器。旧 detour 的 TLS 查找改写这些寄存器，可能破坏调用者已经准备好的参数。
-
-本机记录到 7 次访问违规，均为 `0xC0000005 / Taskmgr.exe+0x60DE9`，位于 `WdcCalculatePowerUsage` 的输出指针写入。旧 detour 的反汇编见 `evidence/crash-leaf-abi.txt`。
-
-0.1.1 完全移除这个全局 getter Hook，也不改全局核心数。现在只扩容原生 `CpuHeatMap` 实例，提供足够长度的 NUMA ID 存储和停泊标志位图，并通过原生 `SwitchChart` 选择热力图。新增汇编回归探针验证真实 getter 的五个易失寄存器保持不变。退出时恢复图表模式并移除 Hook。
-
-不要再运行旧 0.1.0 EXE。当前 `MCNativeTaskmgr.exe` 与 `MCNativeTaskmgr-0.2.0.exe` 为兼容版；旧版 Release 保留作回退。压缩包只含标准文件名 EXE。
+0.2.0 根据本机 Taskmgr 的 PE/PDB 身份与实际指令布局匹配；失败时在注入前停止。保持原生 CpuHeatMap 路线，不改全局核心数。六文件静态检查和旧版实机记录的范围见[兼容性说明](COMPATIBILITY-0.2.0.md)，本轮维护未重新注入或运行 Minecraft。
 
 ## 客户端运行
 
@@ -47,15 +20,7 @@
 
 最终用户不需要 Python、Visual Studio、CMake 或手动加载 DLL。DLL 已嵌入 EXE，只在本次会话中提取到用户临时目录；没有修改系统 Taskmgr.exe 文件，没有后台服务或开机启动。
 
-## 选择这条路线的原因
-
-| 路线 | 普通家用 PC | 原生任务管理器渲染 | 最小化与操控 |
-|---|---|---|---|
-| A：真实核心占用率 | 核心数限制明显，32 个同时显示像素只能约 8×4；时间轴可扩展另一维，但不能任意摆放像素 | 是，显示真实统计图 | 还需要游戏端接入；会额外消耗 CPU |
-| B：原生 CPU 热力图数据 Hook | 可创建虚拟显示格子，无须真实拥有对应数量的核心 | 是，使用原有 DirectUI 热力图模板、布局和颜色方法 | 配合 Fabric FBO 导出与输入 API 可支持 |
-| C：GetDC/BitBlt 贴图、DWM 或播放器子窗口 | 容易做出原型 | 不满足本项目的原生图表要求 | 仅靠窗口捕获和窗口消息不能保证最小化后继续运行 |
-
-采用 **B + Fabric 游戏端接入**。显示为 64×36、2304 个原生热力图单元，映射到原生主题的六档 CPU 颜色。源画面最多导出 20 FPS，任务管理器 UI 定时器目标为 10 FPS。0.1.2 本机 90 秒实际游戏帧曾达到约 9.19 FPS；新版实测见验收文件。
+显示使用 64×36、2304 个任务管理器原生热力图单元，映射六档 CPU 颜色；游戏源最多导出 20 FPS，任务管理器 UI 定时器目标 10 FPS。
 
 ## 实现链路
 
@@ -83,7 +48,6 @@ native/src/symbol_cache.cpp       微软符号匹配、下载、缓存
 native/src/profile.h             已验收版本的离线回退配置
 native/taskmgr-profile.json      版本、哈希、符号身份
 native/tests/                   原生指令跳板和寄存器回归探针
-evidence/                       已完成的测试结果
 ```
 
 游戏端构建，要求 JDK 21，Gradle Wrapper 会下载固定的 Gradle 8.10.2：
@@ -120,20 +84,6 @@ cd native
 ```
 
 `--check-compat` 可独立检查系统支持情况；`--start` 连接游戏并开始。`--self-test-native-symbols` 强制绕过内置配置，执行 35 秒动态匹配生命周期检查。`--self-test-native` 执行 35 秒 DLL 生命周期检查；`--self-test-renderer` 使用明确标记的六档灰度与移动条纹，显示 90 秒后恢复；`--self-test-game-renderer` 使用正在运行的真实 MC 帧，同样显示 90 秒后恢复。测试都需要在任务管理器打开“性能 → CPU”，报告写入 EXE 同目录 `evidence`。测试画面不会用于正常游戏会话。
-
-## 测试证据
-
-新版：`compatibility-matrix-0.2.0.json`、`native-startup-compat-0.2.0.json`、`native-renderer-test-0.2.0.json`、`native-game-renderer-test-0.2.0.json`、`native-user-acceptance-0.2.0.json`。以下为保留的历史记录。
-
-- `native-game-renderer-test.json`：本版完整的真实 MC → 共享帧 → 原生格子链路，90 秒约 **9.19 FPS**，源帧最小化标志为 2，2304 格，六档亮度，DLL 卸载通过。整个屏幕由原生 GridLayout 使用，最终截图见 `native-game-renderer.jpg`。
-- `native-renderer-user-acceptance.json`：用户确认任务管理器内能看到操作引起的场景变化；这是用户验收，不将其冒充为每个按键的自动测量。保存的截图停留在演示说明画面，场景变化由用户另行确认。
-- `native-renderer-test.json`：清理旧格子后的 90 秒灰度/移动条纹测试，原生格子从第一行到最后一行均有有效边界；这是灰度测试阶段的构建。最终交付构建另由真实 MC 测试覆盖。
-- `native-profile-test.json`：七个 Hook 跳板检查和全局核心数 getter 寄存器回归探针通过。
-- `native-geometry-test.json`：初始零高度、零宽度等待、视口适配和调整尺寸的计算检查通过；不以此代替屏幕验收。
-- `game-bridge-test.json`：此前游戏端独立测试，IsIconic 为真，导出约 **19 FPS**，移动、视角、Esc 与断线释放通过。本版未改动游戏模组。
-- `native-startup-test.json`：此前 0.1.1 的 35 秒生命周期记录，单独不能证明图像显示。
-
-0.2.0 静态矩阵和七项拒绝测试见 `compatibility-matrix-0.2.0.json`；本机新渲染记录为文件名带 `-0.2.0` 的证据。上面的 0.1.2 记录保留为历史验收，不能冒充新版实测。跨系统实机、长时间运行、IME、着色器、Sodium/Iris 尚未覆盖。
 
 ## 排错
 
