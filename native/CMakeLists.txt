@@ -31,6 +31,10 @@ target_link_libraries(MCNativeProfileVerify PRIVATE minhook)
 add_executable(MCNativeGeometryVerify tests/geometry_verify.cpp)
 target_include_directories(MCNativeGeometryVerify PRIVATE src)
 
+# Independent geometry test: no Taskmgr dependency or process injection.
+enable_testing()
+add_test(NAME geometry COMMAND MCNativeGeometryVerify)
+
 add_library(zydis STATIC third_party/zydis/Zydis.c)
 target_include_directories(zydis PUBLIC third_party/zydis)
 target_compile_definitions(zydis PUBLIC ZYDIS_STATIC_BUILD ZYCORE_STATIC_BUILD ZYDIS_DISABLE_ENCODER ZYDIS_DISABLE_FORMATTER ZYDIS_DISABLE_AVX512 ZYDIS_DISABLE_KNC ZYDIS_DISABLE_SEGMENT)

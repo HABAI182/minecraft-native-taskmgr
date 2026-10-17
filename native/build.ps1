@@ -2,8 +2,8 @@ param([string]$BuildDirectory = (Join-Path $PSScriptRoot 'build'))
 $ErrorActionPreference = 'Stop'
 $mcVswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
 if (-not (Test-Path -LiteralPath $mcVswhere)) { throw '请安装 Visual Studio 2022 的 C++ 桌面开发组件。' }
-$mcVsPath = & $mcVswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-if (-not $mcVsPath) { throw '缺少 Visual C++ x64 构建工具。' }
+$mcVsPath = & $mcVswhere -latest -version '[17.0,18.0)' -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+if (-not $mcVsPath) { throw '缺少 Visual Studio 2022 的 C++ x64 构建工具；本脚本使用 VS 17 2022 生成器。' }
 $mcCmake = Join-Path $mcVsPath 'Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe'
 if (-not (Test-Path -LiteralPath $mcCmake)) {
     $mcCmakeCommand = Get-Command cmake.exe -ErrorAction SilentlyContinue

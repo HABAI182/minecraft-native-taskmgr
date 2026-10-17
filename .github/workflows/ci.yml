@@ -1,0 +1,33 @@
+name: checks
+on: [push, pull_request]
+permissions:
+  contents: read
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  native:
+    # Match the explicitly selected Visual Studio 17 2022 generator.
+    runs-on: windows-2022
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - run: cmake -S native -B build/native -G "Visual Studio 17 2022" -A x64
+      - run: cmake --build build/native --config Release
+      - run: ctest --test-dir build/native -C Release --output-on-failure
+  mod:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Build pinned Fabric mod (no game launch)
+        working-directory: game-mod
+        run: bash gradlew --no-daemon build
