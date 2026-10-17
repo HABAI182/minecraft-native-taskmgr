@@ -7,7 +7,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   native:
-    runs-on: windows-latest
+    # Match the explicitly selected Visual Studio 17 2022 generator.
+    runs-on: windows-2022
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
